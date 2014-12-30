@@ -103,53 +103,415 @@
         </LinearLayout>
     </LinearLayout>
 
+    <LinearLayout
+        android:id="@+id/layout_curves"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/horizontalScrollView"
+        android:layout_alignParentLeft="true"
+        android:orientation="vertical"
+        android:visibility="invisible">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <TextView
+                android:id="@+id/text_KX"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center_horizontal"
+                android:textColor="@android:color/holo_blue_light"/>
+            <TextView
+                android:id="@+id/text_KY"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center_horizontal"
+                android:textColor="@android:color/holo_blue_light"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <SeekBar
+                android:id="@+id/seekBar_KX"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"/>
+            <SeekBar
+                android:id="@+id/seekBar_KY"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"/>
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/layout_gain"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/horizontalScrollView"
+        android:layout_alignParentLeft="true"
+        android:orientation="vertical"
+        android:visibility="invisible">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <TextView
+                android:id="@+id/text_gain"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center_horizontal"
+                android:textColor="@android:color/holo_blue_light"/>
+            <TextView
+                android:id="@+id/text_bais"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center_horizontal"
+                android:textColor="@android:color/holo_blue_light"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <SeekBar
+                android:id="@+id/seekBar_gain"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"/>
+            <SeekBar
+                android:id="@+id/seekBar_bais"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"/>
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/layout_gamma"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/horizontalScrollView"
+        android:layout_alignParentLeft="true"
+        android:orientation="vertical"
+        android:visibility="invisible">
+        <TextView
+            android:id="@+id/text_gamma"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:textColor="@android:color/holo_blue_light"/>
+        <SeekBar
+            android:id="@+id/seekBar_gamma"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/layout_redAdjust"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/horizontalScrollView"
+        android:layout_alignParentLeft="true"
+        android:orientation="vertical"
+        android:visibility="invisible">
+        <TextView
+            android:id="@+id/text_redAdjust"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:textColor="@android:color/holo_blue_light"/>
+        <SeekBar
+            android:id="@+id/seekBar_redAdjust"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/layout_greenAdjust"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/horizontalScrollView"
+        android:layout_alignParentLeft="true"
+        android:orientation="vertical"
+        android:visibility="invisible">
+        <TextView
+            android:id="@+id/text_greenAdjust"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:textColor="@android:color/holo_blue_light"/>
+        <SeekBar
+            android:id="@+id/seekBar_greenAdjust"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/layout_blueAdjust"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/horizontalScrollView"
+        android:layout_alignParentLeft="true"
+        android:orientation="vertical"
+        android:visibility="invisible">
+        <TextView
+            android:id="@+id/text_blueAdjust"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:textColor="@android:color/holo_blue_light"/>
+        <SeekBar
+            android:id="@+id/seekBar_blueAdjust"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
     <HorizontalScrollView
         android:id="@+id/horizontalScrollView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true">
+        android:layout_alignParentBottom="true"
+        android:scrollbars="none">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-
-            <ImageView
-                android:id="@+id/effect_opacity"
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:onClick="buttonClicked"
-                android:padding="2dp"
-                android:src="@drawable/effect_gamma" />
-
-            <ImageView
-                android:id="@+id/effect_exposure"
+                android:orientation="vertical">
+                <ImageView
+                    android:id="@+id/effect_natural"
+                    android:layout_width="75dp"
+                    android:layout_height="60dp"
+                    android:paddingLeft="5dp"
+                    android:paddingRight="5dp"
+                    android:onClick="buttonClicked"
+                    android:src="@drawable/natural"
+                    android:background="@drawable/image_selected"
+                    />
+                <TextView
+                    android:layout_width="75dp"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:text="Natural"/>
+            </LinearLayout>
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:onClick="buttonClicked"
-                android:padding="2dp"
-                android:src="@drawable/effect_gamma" />
-
-            <ImageView
-                android:id="@+id/effect_contrast"
+                android:orientation="vertical">
+                <ImageView
+                    android:id="@+id/effect_opacity"
+                    android:layout_width="75dp"
+                    android:layout_height="60dp"
+                    android:paddingLeft="5dp"
+                    android:paddingRight="5dp"
+                    android:onClick="buttonClicked"
+                    android:src="@drawable/natural"
+                    android:background="@drawable/image_selected"/>
+                <TextView
+                    android:layout_width="75dp"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:text="Opacity"/>
+            </LinearLayout>
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:onClick="buttonClicked"
-                android:padding="2dp"
-                android:src="@drawable/effect_gamma" />
+                android:orientation="vertical">
+                <ImageView
+                    android:id="@+id/effect_exposure"
+                    android:layout_width="75dp"
+                    android:layout_height="60dp"
+                    android:paddingLeft="5dp"
+                    android:paddingRight="5dp"
+                    android:onClick="buttonClicked"
+                    android:src="@drawable/natural"
+                    android:background="@drawable/image_selected"/>
+                <TextView
+                    android:layout_width="75dp"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:text="Exposure"/>
+            </LinearLayout>
 
-            <ImageView
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:onClick="buttonClicked"
-                android:padding="2dp"
-                android:src="@drawable/effect_gamma" />
-
-            <ImageView
+                android:orientation="vertical">
+                <ImageView
+                    android:id="@+id/effect_contrast"
+                    android:layout_width="75dp"
+                    android:layout_height="60dp"
+                    android:paddingLeft="5dp"
+                    android:paddingRight="5dp"
+                    android:onClick="buttonClicked"
+                    android:src="@drawable/natural"
+                    android:background="@drawable/image_selected"/>
+                <TextView
+                    android:layout_width="75dp"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:text="Contrast"/>
+            </LinearLayout>
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:onClick="buttonClicked"
-                android:padding="2dp"
-                android:src="@drawable/effect_gamma" />
+                android:orientation="vertical">
+                <ImageView
+                    android:id="@+id/effect_curves"
+                    android:layout_width="75dp"
+                    android:layout_height="60dp"
+                    android:paddingLeft="5dp"
+                    android:paddingRight="5dp"
+                    android:onClick="buttonClicked"
+                    android:src="@drawable/natural"
+                    android:background="@drawable/image_selected"/>
+                <TextView
+                    android:layout_width="75dp"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:text="Curves"/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <ImageView
+                    android:id="@+id/effect_gain"
+                    android:layout_width="75dp"
+                    android:layout_height="60dp"
+                    android:paddingLeft="5dp"
+                    android:paddingRight="5dp"
+                    android:onClick="buttonClicked"
+                    android:src="@drawable/natural"
+                    android:background="@drawable/image_selected"/>
+                <TextView
+                    android:layout_width="75dp"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:text="Gain"/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <ImageView
+                    android:id="@+id/effect_gamma"
+                    android:layout_width="75dp"
+                    android:layout_height="60dp"
+                    android:paddingLeft="5dp"
+                    android:paddingRight="5dp"
+                    android:onClick="buttonClicked"
+                    android:src="@drawable/natural"
+                    android:background="@drawable/image_selected"/>
+                <TextView
+                    android:layout_width="75dp"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:text="Gamma"/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <ImageView
+                    android:id="@+id/effect_grayscale"
+                    android:layout_width="75dp"
+                    android:layout_height="60dp"
+                    android:paddingLeft="5dp"
+                    android:paddingRight="5dp"
+                    android:onClick="buttonClicked"
+                    android:src="@drawable/natural"
+                    android:background="@drawable/image_selected"/>
+                <TextView
+                    android:layout_width="75dp"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:text="Gray"/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <ImageView
+                    android:id="@+id/effect_invert"
+                    android:layout_width="75dp"
+                    android:layout_height="60dp"
+                    android:paddingLeft="5dp"
+                    android:paddingRight="5dp"
+                    android:onClick="buttonClicked"
+                    android:src="@drawable/natural"
+                    android:background="@drawable/image_selected"/>
+                <TextView
+                    android:layout_width="75dp"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:text="Invert"/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <ImageView
+                    android:id="@+id/effect_redAdjust"
+                    android:layout_width="75dp"
+                    android:layout_height="60dp"
+                    android:paddingLeft="5dp"
+                    android:paddingRight="5dp"
+                    android:onClick="buttonClicked"
+                    android:src="@drawable/natural"
+                    android:background="@drawable/image_selected"/>
+                <TextView
+                    android:layout_width="75dp"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:text="Red"/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <ImageView
+                    android:id="@+id/effect_greenAdjust"
+                    android:layout_width="75dp"
+                    android:layout_height="60dp"
+                    android:paddingLeft="5dp"
+                    android:paddingRight="5dp"
+                    android:onClick="buttonClicked"
+                    android:src="@drawable/natural"
+                    android:background="@drawable/image_selected"/>
+                <TextView
+                    android:layout_width="75dp"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:text="Green"/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <ImageView
+                    android:id="@+id/effect_blueAdjust"
+                    android:layout_width="75dp"
+                    android:layout_height="60dp"
+                    android:paddingLeft="5dp"
+                    android:paddingRight="5dp"
+                    android:onClick="buttonClicked"
+                    android:src="@drawable/natural"
+                    android:background="@drawable/image_selected"/>
+                <TextView
+                    android:layout_width="75dp"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:text="Blue"/>
+            </LinearLayout>
+
         </LinearLayout>
 
 
