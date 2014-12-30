@@ -24,7 +24,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.SeekBar;
+import android.widget.TextView;
 
 import com.davemorrissey.labs.subscaleview.ScaleImageView;
 
@@ -47,7 +49,10 @@ public class MainActivity extends ActionBarActivity{
     public Bitmap mSrcBitmap;
     public Bitmap mTargetBitmap;
     private Filter mFilter;
-    private SeekBar OpacitySeekBar, ExposureSeekBar;
+
+    private SeekBar OpacitySeekBar, ExposureSeekBar, BrightnessSeekBar, ContrastSeekBar;
+    private LinearLayout OpacityLayout, ExposureLayout, ContrastLayout;
+    private TextView OpacityText, ExposureText, BrightnessText, ContrastText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,7 +60,7 @@ public class MainActivity extends ActionBarActivity{
         setContentView(R.layout.activity_main);
 
         mZoomImageView = (ScaleImageView) findViewById(R.id.mainScaleImage);
-        findIdSeekBar();
+        findId();
 
         showDialog();
         mFilter = new Filter();
@@ -84,9 +89,20 @@ public class MainActivity extends ActionBarActivity{
         return super.onOptionsItemSelected(item);
     }
 
-    private void findIdSeekBar() {
+    private void findId() {
         OpacitySeekBar = (SeekBar) findViewById(R.id.seekBar_opacity);
         ExposureSeekBar = (SeekBar) findViewById(R.id.seekBar_exposure);
+        BrightnessSeekBar = (SeekBar) findViewById(R.id.seekBar_brightness);
+        ContrastSeekBar = (SeekBar) findViewById(R.id.seekBar_contrast);
+
+        OpacityText = (TextView) findViewById(R.id.text_opacity);
+        ExposureText = (TextView) findViewById(R.id.text_exposure);
+        BrightnessText = (TextView) findViewById(R.id.text_brightness);
+        ContrastText = (TextView) findViewById(R.id.text_contrast);
+
+        OpacityLayout = (LinearLayout) findViewById(R.id.layout_opacity);
+        ExposureLayout = (LinearLayout) findViewById(R.id.layout_exposure);
+        ContrastLayout = (LinearLayout) findViewById(R.id.layout_contrast);
     }
 
     void showDialog() {
@@ -321,17 +337,19 @@ public class MainActivity extends ActionBarActivity{
     }
 
     private void setupSeekBar(final View v) {
-        invisibleSeekBar();
+        invisibleSeekBarLayout();
 
         switch (v.getId()) {
             case R.id.effect_opacity:
-                OpacitySeekBar.setVisibility(View.VISIBLE);
+                OpacityLayout.setVisibility(View.VISIBLE);
                 OpacitySeekBar.setMax(255);
                 OpacitySeekBar.setProgress(255);
+                OpacityText.setText("Opacity: 100");
                 OpacitySeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
                     @Override
                     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                         mFilter.setValue(progress);
+                        OpacityText.setText("Opacity: " + progress * 100 / 255);
                     }
 
                     @Override
@@ -346,13 +364,58 @@ public class MainActivity extends ActionBarActivity{
                 });
                 break;
             case R.id.effect_exposure:
-                ExposureSeekBar.setVisibility(View.VISIBLE);
+                ExposureLayout.setVisibility(View.VISIBLE);
                 ExposureSeekBar.setMax(500);
                 ExposureSeekBar.setProgress(100);
+                ExposureText.setText("Exposure: 100");
                 ExposureSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
                     @Override
                     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                         mFilter.setValue(progress);
+                        ExposureText.setText("Exposure: " + progress);
+                    }
+
+                    @Override
+                    public void onStartTrackingTouch(SeekBar seekBar) {
+
+                    }
+
+                    @Override
+                    public void onStopTrackingTouch(SeekBar seekBar) {
+                        new HandleBitmapTask(v, mSrcBitmap).execute();
+                    }
+                });
+                break;
+            case R.id.effect_contrast:
+                ContrastLayout.setVisibility(View.VISIBLE);
+                BrightnessSeekBar.setMax(200);
+                ContrastSeekBar.setMax(200);
+                BrightnessSeekBar.setProgress(100);
+                ContrastSeekBar.setProgress(100);
+                BrightnessText.setText("Brightness: 0");
+                ContrastText.setText("Contrast: 0");
+                BrightnessSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+                    @Override
+                    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                        mFilter.setValue1(progress);
+                        BrightnessText.setText("Brightness: "+ (progress-100));
+                    }
+
+                    @Override
+                    public void onStartTrackingTouch(SeekBar seekBar) {
+
+                    }
+
+                    @Override
+                    public void onStopTrackingTouch(SeekBar seekBar) {
+                        new HandleBitmapTask(v, mSrcBitmap).execute();
+                    }
+                });
+                ContrastSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+                    @Override
+                    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                        mFilter.setValue2(progress);
+                        ContrastText.setText("Contrast: "+ (progress-100));
                     }
 
                     @Override
@@ -369,9 +432,10 @@ public class MainActivity extends ActionBarActivity{
         }
     }
 
-    private void invisibleSeekBar() {
-        OpacitySeekBar.setVisibility(View.INVISIBLE);
-        ExposureSeekBar.setVisibility(View.INVISIBLE);
+    private void invisibleSeekBarLayout() {
+        OpacityLayout.setVisibility(View.INVISIBLE);
+        ExposureLayout.setVisibility(View.INVISIBLE);
+        ContrastLayout.setVisibility(View.INVISIBLE);
     }
 
     /**
