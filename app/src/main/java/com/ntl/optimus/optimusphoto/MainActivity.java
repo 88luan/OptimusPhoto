@@ -27,17 +27,19 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.davemorrissey.labs.subscaleview.ScaleImageView;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
 
-public class MainActivity extends ActionBarActivity{
+public class MainActivity extends ActionBarActivity implements ColorAdjustmentFragment.OnFragmentInteractionListener{
     private static final String IMAGE_DIRECTORY_NAME = "Optimus NTL";
     private static final int CAMERA_CAPTURE_REQUEST_CODE = 100;
     private static final int GALLERY_REQUEST_CODE = 200;
@@ -47,15 +49,8 @@ public class MainActivity extends ActionBarActivity{
     public ScaleImageView mZoomImageView;
     private DialogFragment mChooseDialog;
     public Bitmap mSrcBitmap;
-    public Bitmap mTargetBitmap;
-    private Filter mFilter;
-
-    private SeekBar OpacitySeekBar, ExposureSeekBar, BrightnessSeekBar, ContrastSeekBar, KXCurvesSeekBar, KYCurvesSeekBar,
-                    GainSeekBar, BaisSeekBar, GammaSeekBar, RedAdjustSeekBar, GreenAdjustSeekBar, BlueAdjustSeekBar;
-    private LinearLayout OpacityLayout, ExposureLayout, ContrastLayout, CurvesLayout,
-                    GainLayout, GammaLayout, RedAdjustLayout, GreenAdjustLayout, BlueAdjustLayout;
-    private TextView OpacityText, ExposureText, BrightnessText, ContrastText, KXCurvesText, KYCurvesText,
-                    GainText, BaisText, GammaText, RedAdjustText, GreenAdjustText, BlueAdjustText;
+    public Bitmap mDestinationBitmap;
+    ColorAdjustmentFragment colorFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,10 +58,25 @@ public class MainActivity extends ActionBarActivity{
         setContentView(R.layout.activity_main);
 
         mZoomImageView = (ScaleImageView) findViewById(R.id.mainScaleImage);
-        findId();
+
+        if (findViewById(R.id.fragment_container) != null) {
+
+            // However, if we're being restored from a previous state,
+            // then we don't need to do anything and should return or else
+            // we could end up with overlapping fragments.
+            if (savedInstanceState != null) {
+                return;
+            }
+
+            // Create an instance of ExampleFragment
+            colorFragment = new ColorAdjustmentFragment();
+
+            // Add the fragment to the 'fragment_container' FrameLayout
+            getFragmentManager().beginTransaction().add(R.id.fragment_container, colorFragment).commit();
+        }
+        //findId();
 
         showDialog();
-        mFilter = new Filter();
     }
 
 
@@ -84,50 +94,17 @@ public class MainActivity extends ActionBarActivity{
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        if (id == R.id.action_gallery) {
+            openGallery(MainActivity.this);
+        }
+        else if (id == R.id.action_camera) {
+            openCamera(MainActivity.this);
+        }
+        else if (id == R.id.action_save) {
+            new SavingImage().execute(mDestinationBitmap);
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    private void findId() {
-        OpacitySeekBar = (SeekBar) findViewById(R.id.seekBar_opacity);
-        ExposureSeekBar = (SeekBar) findViewById(R.id.seekBar_exposure);
-        BrightnessSeekBar = (SeekBar) findViewById(R.id.seekBar_brightness);
-        ContrastSeekBar = (SeekBar) findViewById(R.id.seekBar_contrast);
-        KXCurvesSeekBar = (SeekBar) findViewById(R.id.seekBar_KX);
-        KYCurvesSeekBar = (SeekBar) findViewById(R.id.seekBar_KY);
-        GainSeekBar = (SeekBar) findViewById(R.id.seekBar_gain);
-        BaisSeekBar = (SeekBar) findViewById(R.id.seekBar_bais);
-        GammaSeekBar = (SeekBar) findViewById(R.id.seekBar_gamma);
-        RedAdjustSeekBar = (SeekBar) findViewById(R.id.seekBar_redAdjust);
-        GreenAdjustSeekBar = (SeekBar) findViewById(R.id.seekBar_greenAdjust);
-        BlueAdjustSeekBar = (SeekBar) findViewById(R.id.seekBar_blueAdjust);
-
-        OpacityText = (TextView) findViewById(R.id.text_opacity);
-        ExposureText = (TextView) findViewById(R.id.text_exposure);
-        BrightnessText = (TextView) findViewById(R.id.text_brightness);
-        ContrastText = (TextView) findViewById(R.id.text_contrast);
-        KXCurvesText = (TextView) findViewById(R.id.text_KX);
-        KYCurvesText = (TextView) findViewById(R.id.text_KY);
-        GainText = (TextView) findViewById(R.id.text_gain);
-        BaisText = (TextView) findViewById(R.id.text_bais);
-        GammaText = (TextView) findViewById(R.id.text_gamma);
-        RedAdjustText = (TextView) findViewById(R.id.text_redAdjust);
-        GreenAdjustText = (TextView) findViewById(R.id.text_greenAdjust);
-        BlueAdjustText = (TextView) findViewById(R.id.text_blueAdjust);
-
-        OpacityLayout = (LinearLayout) findViewById(R.id.layout_opacity);
-        ExposureLayout = (LinearLayout) findViewById(R.id.layout_exposure);
-        ContrastLayout = (LinearLayout) findViewById(R.id.layout_contrast);
-        CurvesLayout = (LinearLayout) findViewById(R.id.layout_curves);
-        GainLayout = (LinearLayout) findViewById(R.id.layout_gain);
-        GammaLayout = (LinearLayout) findViewById(R.id.layout_gamma);
-        RedAdjustLayout = (LinearLayout) findViewById(R.id.layout_redAdjust);
-        GreenAdjustLayout = (LinearLayout) findViewById(R.id.layout_greenAdjust);
-        BlueAdjustLayout = (LinearLayout) findViewById(R.id.layout_blueAdjust);
     }
 
     void showDialog() {
@@ -135,6 +112,16 @@ public class MainActivity extends ActionBarActivity{
         mChooseDialog = MyDialogFragment.newInstance();
         mChooseDialog.show(getFragmentManager(), "dialog");
         mChooseDialog.setCancelable(true);
+    }
+
+    @Override
+    public void onHandleBitmap(View v) {
+        new HandleBitmapTask(v, mSrcBitmap).execute();
+    }
+
+    @Override
+    public void onLoadSrcBitmap() {
+        mZoomImageView.setImageBitmap(mSrcBitmap);
     }
 
     public static class MyDialogFragment extends DialogFragment {
@@ -249,8 +236,8 @@ public class MainActivity extends ActionBarActivity{
         if (mSrcBitmap != null) {
             mSrcBitmap.recycle();
         }
-        if (mTargetBitmap != null) {
-            mTargetBitmap.recycle();
+        if (mDestinationBitmap != null) {
+            mDestinationBitmap.recycle();
         }
 
         unbindDrawables(findViewById(R.id.RootView));
@@ -292,9 +279,15 @@ public class MainActivity extends ActionBarActivity{
 
         if (resultCode == RESULT_OK) {
 
+            if(mSrcBitmap != null || mDestinationBitmap != null){
+                mSrcBitmap.recycle();
+                mDestinationBitmap.recycle();
+            }
+
             if (requestCode == CAMERA_CAPTURE_REQUEST_CODE) {
 
                 mChooseDialog.dismiss();
+
                 scaleDownImage(mSrcFileUri);
                 displayImage(mSrcBitmap);
 
@@ -358,302 +351,7 @@ public class MainActivity extends ActionBarActivity{
     }
 
     public void buttonClicked(View v) {
-        setupSeekBar(v);
-    }
-
-    private void setupSeekBar(final View v) {
-        invisibleSeekBarLayout();
-
-        switch (v.getId()) {
-            case R.id.effect_natural:
-                mZoomImageView.setImageBitmap(mSrcBitmap);
-                break;
-            case R.id.effect_opacity:
-                OpacityLayout.setVisibility(View.VISIBLE);
-                OpacitySeekBar.setMax(255);
-                OpacitySeekBar.setProgress(255);
-                OpacityText.setText("Opacity: 100");
-                OpacitySeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-                    @Override
-                    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                        mFilter.setValue(progress);
-                        OpacityText.setText("Opacity: " + progress * 100 / 255);
-                    }
-
-                    @Override
-                    public void onStartTrackingTouch(SeekBar seekBar) {
-
-                    }
-
-                    @Override
-                    public void onStopTrackingTouch(SeekBar seekBar) {
-                        new HandleBitmapTask(v, mSrcBitmap).execute();
-                    }
-                });
-                break;
-            case R.id.effect_exposure:
-                ExposureLayout.setVisibility(View.VISIBLE);
-                ExposureSeekBar.setMax(500);
-                ExposureSeekBar.setProgress(100);
-                ExposureText.setText("Exposure: 100");
-                ExposureSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-                    @Override
-                    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                        mFilter.setValue(progress);
-                        ExposureText.setText("Exposure: " + progress);
-                    }
-
-                    @Override
-                    public void onStartTrackingTouch(SeekBar seekBar) {
-
-                    }
-
-                    @Override
-                    public void onStopTrackingTouch(SeekBar seekBar) {
-                        new HandleBitmapTask(v, mSrcBitmap).execute();
-                    }
-                });
-                break;
-            case R.id.effect_contrast:
-                ContrastLayout.setVisibility(View.VISIBLE);
-                BrightnessSeekBar.setMax(200);
-                ContrastSeekBar.setMax(200);
-                BrightnessSeekBar.setProgress(100);
-                ContrastSeekBar.setProgress(100);
-                BrightnessText.setText("Brightness: 0");
-                ContrastText.setText("Contrast: 0");
-                BrightnessSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-                    @Override
-                    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                        mFilter.setValue1(progress);
-                        BrightnessText.setText("Brightness: "+ (progress-100));
-                    }
-
-                    @Override
-                    public void onStartTrackingTouch(SeekBar seekBar) {
-
-                    }
-
-                    @Override
-                    public void onStopTrackingTouch(SeekBar seekBar) {
-                        new HandleBitmapTask(v, mSrcBitmap).execute();
-                    }
-                });
-                ContrastSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-                    @Override
-                    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                        mFilter.setValue2(progress);
-                        ContrastText.setText("Contrast: "+ (progress-100));
-                    }
-
-                    @Override
-                    public void onStartTrackingTouch(SeekBar seekBar) {
-
-                    }
-
-                    @Override
-                    public void onStopTrackingTouch(SeekBar seekBar) {
-                        new HandleBitmapTask(v, mSrcBitmap).execute();
-                    }
-                });
-                break;
-            case R.id.effect_curves:
-                CurvesLayout.setVisibility(View.VISIBLE);
-                KXCurvesSeekBar.setMax(100);
-                KYCurvesSeekBar.setMax(100);
-                KXCurvesSeekBar.setProgress(0);
-                KYCurvesSeekBar.setProgress(0);
-                KXCurvesText.setText("KX: 0");
-                KYCurvesText.setText("KY: 0");
-                KXCurvesSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-                    @Override
-                    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                        mFilter.setValue1_0(progress);
-                        KXCurvesText.setText("KX: "+ progress);
-                    }
-
-                    @Override
-                    public void onStartTrackingTouch(SeekBar seekBar) {
-
-                    }
-
-                    @Override
-                    public void onStopTrackingTouch(SeekBar seekBar) {
-                        new HandleBitmapTask(v, mSrcBitmap).execute();
-                    }
-                });
-                KYCurvesSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-                    @Override
-                    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                        mFilter.setValue2_0(progress);
-                        KYCurvesText.setText("KY: "+ progress);
-                    }
-
-                    @Override
-                    public void onStartTrackingTouch(SeekBar seekBar) {
-
-                    }
-
-                    @Override
-                    public void onStopTrackingTouch(SeekBar seekBar) {
-                        new HandleBitmapTask(v, mSrcBitmap).execute();
-                    }
-                });
-                break;
-            case R.id.effect_gain:
-                GainLayout.setVisibility(View.VISIBLE);
-                GainSeekBar.setMax(100);
-                BaisSeekBar.setMax(100);
-                GainSeekBar.setProgress(0);
-                BaisSeekBar.setProgress(0);
-                GainText.setText("Gain: 0");
-                BaisText.setText("Bais: 0");
-                GainSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-                    @Override
-                    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                        mFilter.setValue1_0(progress);
-                        GainText.setText("Gain: "+ progress);
-                    }
-
-                    @Override
-                    public void onStartTrackingTouch(SeekBar seekBar) {
-
-                    }
-
-                    @Override
-                    public void onStopTrackingTouch(SeekBar seekBar) {
-                        new HandleBitmapTask(v, mSrcBitmap).execute();
-                    }
-                });
-                BaisSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-                    @Override
-                    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                        mFilter.setValue2_0(progress);
-                        BaisText.setText("Bais: "+ progress);
-                    }
-
-                    @Override
-                    public void onStartTrackingTouch(SeekBar seekBar) {
-
-                    }
-
-                    @Override
-                    public void onStopTrackingTouch(SeekBar seekBar) {
-                        new HandleBitmapTask(v, mSrcBitmap).execute();
-                    }
-                });
-                break;
-            case R.id.effect_gamma:
-                GammaLayout.setVisibility(View.VISIBLE);
-                GammaSeekBar.setMax(500);
-                GammaSeekBar.setProgress(100);
-                GammaText.setText("Gamma: 100");
-                GammaSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-                    @Override
-                    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                        mFilter.setValue(progress);
-                        GammaText.setText("Gamma: " + progress);
-                    }
-
-                    @Override
-                    public void onStartTrackingTouch(SeekBar seekBar) {
-
-                    }
-
-                    @Override
-                    public void onStopTrackingTouch(SeekBar seekBar) {
-                        new HandleBitmapTask(v, mSrcBitmap).execute();
-                    }
-                });
-                break;
-            case R.id.effect_grayscale:
-                new HandleBitmapTask(v, mSrcBitmap).execute();
-                break;
-            case R.id.effect_invert:
-                new HandleBitmapTask(v, mSrcBitmap).execute();
-                break;
-            case R.id.effect_redAdjust:
-                RedAdjustLayout.setVisibility(View.VISIBLE);
-                RedAdjustSeekBar.setMax(200);
-                RedAdjustSeekBar.setProgress(100);
-                RedAdjustText.setText("Red: 0");
-                RedAdjustSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-                    @Override
-                    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                        mFilter.setValue(progress);
-                        RedAdjustText.setText("Red: " + (progress-100));
-                    }
-
-                    @Override
-                    public void onStartTrackingTouch(SeekBar seekBar) {
-
-                    }
-
-                    @Override
-                    public void onStopTrackingTouch(SeekBar seekBar) {
-                        new HandleBitmapTask(v, mSrcBitmap).execute();
-                    }
-                });
-                break;
-            case R.id.effect_greenAdjust:
-                GreenAdjustLayout.setVisibility(View.VISIBLE);
-                GreenAdjustSeekBar.setMax(200);
-                GreenAdjustSeekBar.setProgress(100);
-                GreenAdjustText.setText("Green: 0");
-                GreenAdjustSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-                    @Override
-                    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                        mFilter.setValue(progress);
-                        GreenAdjustText.setText("Green: " + (progress-100));
-                    }
-
-                    @Override
-                    public void onStartTrackingTouch(SeekBar seekBar) {
-
-                    }
-
-                    @Override
-                    public void onStopTrackingTouch(SeekBar seekBar) {
-                        new HandleBitmapTask(v, mSrcBitmap).execute();
-                    }
-                });
-                break;
-            case R.id.effect_blueAdjust:
-                BlueAdjustLayout.setVisibility(View.VISIBLE);
-                BlueAdjustSeekBar.setMax(200);
-                BlueAdjustSeekBar.setProgress(100);
-                BlueAdjustText.setText("Blue: 0");
-                BlueAdjustSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-                    @Override
-                    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                        mFilter.setValue(progress);
-                        BlueAdjustText.setText("Blue: " + (progress-100));
-                    }
-
-                    @Override
-                    public void onStartTrackingTouch(SeekBar seekBar) {
-
-                    }
-
-                    @Override
-                    public void onStopTrackingTouch(SeekBar seekBar) {
-                        new HandleBitmapTask(v, mSrcBitmap).execute();
-                    }
-                });
-                break;
-        }
-    }
-
-    private void invisibleSeekBarLayout() {
-        OpacityLayout.setVisibility(View.INVISIBLE);
-        ExposureLayout.setVisibility(View.INVISIBLE);
-        ContrastLayout.setVisibility(View.INVISIBLE);
-        CurvesLayout.setVisibility(View.INVISIBLE);
-        GainLayout.setVisibility(View.INVISIBLE);
-        GammaLayout.setVisibility(View.INVISIBLE);
-        RedAdjustLayout.setVisibility(View.INVISIBLE);
-        GreenAdjustLayout.setVisibility(View.INVISIBLE);
-        BlueAdjustLayout.setVisibility(View.INVISIBLE);
+        colorFragment.setupSeekBar(v);
     }
 
     /**
@@ -685,7 +383,7 @@ public class MainActivity extends ActionBarActivity{
 
         @Override
         protected Bitmap doInBackground(Void... params) {
-            return mFilter.handleBitmap(view, bitmap);
+            return Filter.getInstance().handleBitmap(view, bitmap);
         }
 
         @Override
@@ -706,15 +404,73 @@ public class MainActivity extends ActionBarActivity{
 
         @Override
         protected void onPostExecute(Bitmap bitmap) {
-            if (mTargetBitmap != null) {
-                mTargetBitmap.recycle();
+            if (mDestinationBitmap != null) {
+                mDestinationBitmap.recycle();
             }
-            mTargetBitmap = bitmap;
-            mZoomImageView.setImageBitmap(mTargetBitmap);
+            mDestinationBitmap = bitmap;
+            mZoomImageView.setImageBitmap(mDestinationBitmap);
             if (progressDialog.isShowing())
                 progressDialog.dismiss();
         }
     }
 
+    private class SavingImage extends AsyncTask<Bitmap, Void, Void> {
+        private ProgressDialog progressDialog;
+        @Override
+        protected void onPreExecute() {
+            if (progressDialog == null) {
+                progressDialog = createProgressDialog(MainActivity.this);
+                progressDialog.show();
+            } else {
+                progressDialog.show();
+            }
+            progressDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+                @Override
+                public void onCancel(DialogInterface dialogInterface) {
+                    cancel(true);
+                }
+            });
+        }
 
+        @Override
+        protected Void doInBackground(Bitmap... params) {
+            saveBitmapToFilePNG(params[0]);
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            if (progressDialog.isShowing())
+                progressDialog.dismiss();
+                Toast.makeText(MainActivity.this, "Save Successful", Toast.LENGTH_LONG).show();
+            }
+        }
+
+
+    private void saveBitmapToFilePNG(Bitmap bmp) {
+        try {
+            File imageFolder = new File(
+                    Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), //Pictures folder
+                    IMAGE_DIRECTORY_NAME);
+            // Create the storage directory if it does not exist
+            if (!imageFolder.exists()) {
+                if (!imageFolder.mkdirs()) {
+                    Log.d(IMAGE_DIRECTORY_NAME, "Oops! Failed create "
+                            + IMAGE_DIRECTORY_NAME + " directory");
+                }
+            }
+
+            // Create a media file name
+            String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss",
+                    Locale.getDefault()).format(new Date());
+            File imageFile;
+            imageFile = new File(imageFolder.getPath() + File.separator + timeStamp + ".jpg");
+
+            FileOutputStream fos = new FileOutputStream(imageFile, false);
+            bmp.compress(Bitmap.CompressFormat.PNG, 100, fos);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
 }
