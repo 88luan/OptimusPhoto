@@ -425,7 +425,7 @@
                     android:paddingLeft="5dp"
                     android:paddingRight="5dp"
                     android:onClick="buttonClicked"
-                    android:src="@drawable/natural"
+                    android:src="@drawable/opacity"
                     android:background="@drawable/image_selected"/>
                 <TextView
                     android:layout_width="75dp"
@@ -444,7 +444,7 @@
                     android:paddingLeft="5dp"
                     android:paddingRight="5dp"
                     android:onClick="buttonClicked"
-                    android:src="@drawable/natural"
+                    android:src="@drawable/exposure"
                     android:background="@drawable/image_selected"/>
                 <TextView
                     android:layout_width="75dp"
@@ -464,7 +464,7 @@
                     android:paddingLeft="5dp"
                     android:paddingRight="5dp"
                     android:onClick="buttonClicked"
-                    android:src="@drawable/natural"
+                    android:src="@drawable/contrast"
                     android:background="@drawable/image_selected"/>
                 <TextView
                     android:layout_width="75dp"
@@ -483,7 +483,7 @@
                     android:paddingLeft="5dp"
                     android:paddingRight="5dp"
                     android:onClick="buttonClicked"
-                    android:src="@drawable/natural"
+                    android:src="@drawable/curves"
                     android:background="@drawable/image_selected"/>
                 <TextView
                     android:layout_width="75dp"
@@ -502,7 +502,7 @@
                     android:paddingLeft="5dp"
                     android:paddingRight="5dp"
                     android:onClick="buttonClicked"
-                    android:src="@drawable/natural"
+                    android:src="@drawable/gain"
                     android:background="@drawable/image_selected"/>
                 <TextView
                     android:layout_width="75dp"
@@ -521,7 +521,7 @@
                     android:paddingLeft="5dp"
                     android:paddingRight="5dp"
                     android:onClick="buttonClicked"
-                    android:src="@drawable/natural"
+                    android:src="@drawable/gamma"
                     android:background="@drawable/image_selected"/>
                 <TextView
                     android:layout_width="75dp"
@@ -540,7 +540,7 @@
                     android:paddingLeft="5dp"
                     android:paddingRight="5dp"
                     android:onClick="buttonClicked"
-                    android:src="@drawable/natural"
+                    android:src="@drawable/gray"
                     android:background="@drawable/image_selected"/>
                 <TextView
                     android:layout_width="75dp"
@@ -559,7 +559,7 @@
                     android:paddingLeft="5dp"
                     android:paddingRight="5dp"
                     android:onClick="buttonClicked"
-                    android:src="@drawable/natural"
+                    android:src="@drawable/invert"
                     android:background="@drawable/image_selected"/>
                 <TextView
                     android:layout_width="75dp"
@@ -578,7 +578,7 @@
                     android:paddingLeft="5dp"
                     android:paddingRight="5dp"
                     android:onClick="buttonClicked"
-                    android:src="@drawable/natural"
+                    android:src="@drawable/red"
                     android:background="@drawable/image_selected"/>
                 <TextView
                     android:layout_width="75dp"
@@ -597,7 +597,7 @@
                     android:paddingLeft="5dp"
                     android:paddingRight="5dp"
                     android:onClick="buttonClicked"
-                    android:src="@drawable/natural"
+                    android:src="@drawable/green"
                     android:background="@drawable/image_selected"/>
                 <TextView
                     android:layout_width="75dp"
@@ -616,7 +616,7 @@
                     android:paddingLeft="5dp"
                     android:paddingRight="5dp"
                     android:onClick="buttonClicked"
-                    android:src="@drawable/natural"
+                    android:src="@drawable/blue"
                     android:background="@drawable/image_selected"/>
                 <TextView
                     android:layout_width="75dp"
@@ -635,7 +635,7 @@
                     android:paddingLeft="5dp"
                     android:paddingRight="5dp"
                     android:onClick="buttonClicked"
-                    android:src="@drawable/natural"
+                    android:src="@drawable/block"
                     android:background="@drawable/image_selected"/>
                 <TextView
                     android:layout_width="75dp"
@@ -654,7 +654,7 @@
                     android:paddingLeft="5dp"
                     android:paddingRight="5dp"
                     android:onClick="buttonClicked"
-                    android:src="@drawable/natural"
+                    android:src="@drawable/diffuse"
                     android:background="@drawable/image_selected"/>
                 <TextView
                     android:layout_width="75dp"
@@ -673,7 +673,7 @@
                     android:paddingLeft="5dp"
                     android:paddingRight="5dp"
                     android:onClick="buttonClicked"
-                    android:src="@drawable/natural"
+                    android:src="@drawable/noise"
                     android:background="@drawable/image_selected"/>
                 <TextView
                     android:layout_width="75dp"
@@ -692,7 +692,7 @@
                     android:paddingLeft="5dp"
                     android:paddingRight="5dp"
                     android:onClick="buttonClicked"
-                    android:src="@drawable/natural"
+                    android:src="@drawable/blur"
                     android:background="@drawable/image_selected"/>
                 <TextView
                     android:layout_width="75dp"
@@ -711,7 +711,7 @@
                     android:paddingLeft="5dp"
                     android:paddingRight="5dp"
                     android:onClick="buttonClicked"
-                    android:src="@drawable/natural"
+                    android:src="@drawable/glow"
                     android:background="@drawable/image_selected"/>
                 <TextView
                     android:layout_width="75dp"
@@ -730,7 +730,7 @@
                     android:paddingLeft="5dp"
                     android:paddingRight="5dp"
                     android:onClick="buttonClicked"
-                    android:src="@drawable/natural"
+                    android:src="@drawable/maximum"
                     android:background="@drawable/image_selected"/>
                 <TextView
                     android:layout_width="75dp"
@@ -749,7 +749,7 @@
                     android:paddingLeft="5dp"
                     android:paddingRight="5dp"
                     android:onClick="buttonClicked"
-                    android:src="@drawable/natural"
+                    android:src="@drawable/minimum"
                     android:background="@drawable/image_selected"/>
                 <TextView
                     android:layout_width="75dp"
@@ -768,7 +768,7 @@
                     android:paddingLeft="5dp"
                     android:paddingRight="5dp"
                     android:onClick="buttonClicked"
-                    android:src="@drawable/natural"
+                    android:src="@drawable/oil"
                     android:background="@drawable/image_selected"/>
                 <TextView
                     android:layout_width="75dp"
